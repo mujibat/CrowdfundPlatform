@@ -1,63 +1,66 @@
-# CrowdfundPlat Smart Contract
+## Foundry
 
-This is a Solidity smart contract for managing crowdfunding campaigns. The contract allows users to propose new campaigns, contribute Ether to campaigns, and handles campaign expiration and fund transfer. Below, you'll find an overview of the contract's functionality and usage.
+**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
 
-## Table of Contents
-- [Overview](#overview)
-- [Usage](#usage)
-  - [Campaign Creation](#campaign-creation)
-  - [Contribution Mechanism](#contribution-mechanism)
-  - [Campaign Expiry and Refund](#campaign-expiry-and-refund)
-  - [Campaign Completion and Fund Transfer](#campaign-completion-and-fund-transfer)
-- [License](#license)
+Foundry consists of:
 
-## Overview
+-   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
+-   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
+-   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
+-   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
 
-The `CrowdfundPlat` smart contract manages crowdfunding campaigns with the following features:
+## Documentation
 
-- **Campaign Creation:** Users can propose new campaigns with unique identifiers, titles, funding goals in Ether, durations, and owner addresses.
-
-- **Contribution Mechanism:** Users can contribute Ether to specific campaigns. Contributions are allowed only if the campaign is active (within its duration) and has not reached its funding goal.
-
-- **Campaign Expiry and Refund:** If a campaign does not reach its funding goal within the specified duration, contributors are automatically refunded. The refund is processed when the campaign duration ends.
-
-- **Campaign Completion and Fund Transfer:** Campaign owners can mark a campaign as successful if it reaches its funding goal. This action transfers the raised funds to the owner's address.
+https://book.getfoundry.sh/
 
 ## Usage
 
-### Campaign Creation
+### Build
 
-To create a new campaign, use the `proposeCampaign` function:
-
-```solidity
-function proposeCampaign(uint _ID, string memory _title, uint256 _fundingGoal, uint256 _durationTime) external
+```shell
+$ forge build
 ```
 
-- `_ID`: Unique identifier for the campaign.
-- `_title`: Title of the campaign.
-- `_fundingGoal`: Funding goal in Ether.
-- `_durationTime`: Duration of the campaign in seconds.
+### Test
 
-### Contribution Mechanism
-
-To contribute Ether to a campaign, use the `contributeEth` function:
-
-```solidity
-function contributeEth(uint _ID) external payable
+```shell
+$ forge test
 ```
 
-- `_ID`: Identifier of the campaign you want to contribute to.
+### Format
 
-### Campaign Expiry and Refund
-
-Campaign expiration and refund are handled automatically. If a campaign does not reach its funding goal within the specified duration, contributors are refunded. No manual action is required.
-
-### Campaign Completion and Fund Transfer
-
-To mark a campaign as successful and transfer the raised funds to the owner's address, use the `campaignEnds` function:
-
-```solidity
-function campaignEnds(uint _ID) external
+```shell
+$ forge fmt
 ```
 
-- `_ID`: Identifier of the campaign to mark as successful.
+### Gas Snapshots
+
+```shell
+$ forge snapshot
+```
+
+### Anvil
+
+```shell
+$ anvil
+```
+
+### Deploy
+
+```shell
+$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
+```
+
+### Cast
+
+```shell
+$ cast <subcommand>
+```
+
+### Help
+
+```shell
+$ forge --help
+$ anvil --help
+$ cast --help
+```
