@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.19;
-import {Test, console2} from "forge-std/Test.sol";
 import {CrowdfundPlat} from "../src/CrowdfundPlatform.sol";
-// import { CrowdfundPlat } from "../"
 import "./Helpers.sol";
 
 contract CrowdfundPlatTest is Helpers {
@@ -71,17 +69,14 @@ contract CrowdfundPlatTest is Helpers {
         uint id = 1;
         _crowdfund.fundingGoal = 15 ether;
         _crowdfund.fundingBalance = 17 ether;
-        //  vm.warp(123333);
-        _crowdfund.durationTime = 34 days;
+        _crowdfund.durationTime = block.timestamp + 10 minutes;
              crowdfund.proposeCampaign(
             _crowdfund.title,
             _crowdfund.fundingGoal,
             _crowdfund.durationTime
         );
-        console2.logUint(block.timestamp);
-        console2.logUint(_crowdfund.durationTime);
-       
-        // vm.expectRevert(CrowdfundPlat.NotInDuration.selector);
+         vm.warp(15 minutes);
+        vm.expectRevert(CrowdfundPlat.NotInDuration.selector);
         crowdfund.contributeEth{value: 4 ether}(id);
     }
     function testContributeEth() public {
@@ -95,6 +90,7 @@ contract CrowdfundPlatTest is Helpers {
             _crowdfund.durationTime
         );
         crowdfund.contributeEth{value: 14 ether}(id);
+        assertEq(crowdfund.getCrowd(1).fundingBalance, 14 ether);
     }
 
     function testNotActiveCampaignEnds() public {
@@ -104,22 +100,21 @@ contract CrowdfundPlatTest is Helpers {
     }
 
     function testNotOwner() public {
+         vm.startPrank(_userA);
         uint id = 1;
         crowdfund.proposeCampaign(
             _crowdfund.title,
             _crowdfund.fundingGoal,
             _crowdfund.durationTime
         );
-        vm.prank(address(0x1111));
+        vm.stopPrank();
+         vm.prank(address(0x1111));
         vm.expectRevert(CrowdfundPlat.NotOwner.selector);
         crowdfund.campaignEnds(id);
     }
 
     function testTimeNotReached() public {
         uint id = 1;
-        console2.logString("hhdd");
-        console2.logUint(block.timestamp);
-        console2.logUint(_crowdfund.durationTime);
         _crowdfund.durationTime = 12 hours;
         crowdfund.proposeCampaign(
             _crowdfund.title,
@@ -132,7 +127,6 @@ contract CrowdfundPlatTest is Helpers {
 
     function testCampaignEnds() public {
         vm.startPrank(_userB);
-        uint id = 1;
           crowdfund.proposeCampaign(
             'Dolapo',
             15 ether,
@@ -189,7 +183,6 @@ contract CrowdfundPlatTest is Helpers {
 
 function testGetContributors() public {
           vm.startPrank(_userB);
-        uint id = 1;
         crowdfund.proposeCampaign("Dolapo", 15 ether, 0);
         vm.stopPrank();
         hoax(address(0x1111), 15 ether);
