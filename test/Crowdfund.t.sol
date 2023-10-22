@@ -26,15 +26,12 @@ contract CrowdfundPlatTest is Helpers {
 
     function testProposeCampaign() public {
         vm.startPrank(_userB);
-        _crowdfund.title = "Dolapo";
-        _crowdfund.fundingGoal = 15 ether;
-        _crowdfund.durationTime = 12 hours;
         _crowdfund.isActive = true;
-        crowdfund.proposeCampaign(
-            _crowdfund.title,
-            _crowdfund.fundingGoal,
-            _crowdfund.durationTime
-        );
+        crowdfund.proposeCampaign("Dolapo", 15 ether, 12 hours);
+        assertEq(crowdfund.getCrowd(1).title, "Dolapo");
+        assertEq(crowdfund.getCrowd(1).fundingGoal, 15 ether);
+        assertEq(crowdfund.getCrowd(1).durationTime, 12 hours + block.timestamp);
+        assertEq(crowdfund.getCrowd(1).isActive, true);
     }
 
     function testNotAmount() public {
